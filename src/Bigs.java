@@ -10,7 +10,6 @@ import java.util.Arrays;
  */
 public class Bigs {
 	
-	
 	// addiert die Ziffernfelder a und b
 	 public static int[ ] add (int[ ] a, int[ ] b) { 
 		 int ueberschlag = 0;
@@ -21,31 +20,31 @@ public class Bigs {
 			 for (int i=0; i<b.length; i++) {
 				 summe = a[i] + b[i] + ueberschlag;
 				 outArr[i] = summe % 10;
-				 ueberschlag = summe - (summe % 10);
+				 ueberschlag = (summe - (summe % 10))/10;
 			 }
 			 for (int j=b.length; j<a.length; j++) {
 				 summe = a[j] + ueberschlag;
 				 outArr[j] = summe % 10;
-				 ueberschlag = summe - (summe % 10);
+				 ueberschlag = (summe - (summe % 10))/10;
 			 }
 		 } else if (a.length < b.length) {
 			 outArr = new int[b.length];
 			 for (int i=0; i<a.length; i++) {
 				 summe = a[i] + b[i] + ueberschlag;
 				 outArr[i] = summe % 10;
-				 ueberschlag = summe - (summe % 10);
+				 ueberschlag = (summe - (summe % 10))/10;
 			 }
 			 for (int j=a.length; j<b.length; j++) {
 				 summe = b[j] + ueberschlag;
 				 outArr[j] = summe % 10;
-				 ueberschlag = summe - (summe % 10);
+				 ueberschlag = (summe - (summe % 10))/10;
 			 }
 		 } else {
 			 outArr = new int[a.length];
 			 for (int i=0; i<a.length; i++) {
 				 summe = a[i] + b[i] + ueberschlag;
 				 outArr[i] = summe % 10;
-				 ueberschlag = summe - (summe % 10);
+				 ueberschlag = (summe - (summe % 10))/10;
 			 }
 		 }
 		 if (ueberschlag > 0) {
@@ -105,13 +104,17 @@ public class Bigs {
 
 	 // ganzzahliger Quotient bei Division durch 10
 	 static int[ ] div10(int[ ] n) { 
-		 return Arrays.copyOfRange(n, 1, n.length);
+		 int[] outArr = new int[n.length-1];
+		 for (int i=0; i<outArr.length; i++) {
+			 outArr[i] = n[i+1];
+		 }
+		 return outArr;
 	 }
 
 	 // Umwandlung einer beliebigen int-Zahl in ein Ziffernfeld
 	 static int[ ] fromInt(int n) { 
 		 int multiplicator = 1;
-		 while (n/(multiplicator*10) > 1) {
+		 while (n/(Math.pow(10, multiplicator)) > 1) {
 			 multiplicator++;
 		 }
 		 int[] outArr = new int[multiplicator];
@@ -127,8 +130,10 @@ public class Bigs {
 
 	 // kopiert den Wert von n
 	 static int[ ] copy(int[ ] n) { 
-//so richtig????
-		 int[] outArr = Arrays.copyOfRange(n, 0, n.length);
+		 int[] outArr = new int[n.length];
+		 for (int i=0; i<outArr.length; i++) {
+			 outArr[i] = n[i];
+		 }
 		 return outArr;
 	 }
 
@@ -140,7 +145,7 @@ public class Bigs {
 		 for (int i=0; i<n.length; i++) {
 			 produkt = n[i] * d + ueberschlag;
 			 outArr[i] = produkt % 10;
-			 ueberschlag = produkt - (produkt % 10);
+			 ueberschlag = (produkt - (produkt % 10))/10;
 		 }
 		 if (ueberschlag > 0) {
 			 int [] finalArr = Arrays.copyOf(outArr, outArr.length + 1);
@@ -161,50 +166,18 @@ public class Bigs {
 		 return outArr;
 	 }
 
+	 
 	 // multipliziert zwei Ziffernfelder
-	 static int[ ] times(int[ ]a, int[ ] b) { 
-		 int ueberschlag = 0;
-		 int produkt = 0;
-		 int[] outArr;
-		 if (a.length > b.length) {
-			 outArr = new int[a.length];
-			 for (int i=0; i<b.length; i++) {
-				 produkt = a[i] * b[i] + ueberschlag;
-				 outArr[i] = produkt % 10;
-				 ueberschlag = produkt - (produkt % 10);
+	 static int[ ] times(int[ ]a, int[ ] b) {
+		 int[] summe = Null();
+		 for (int i=0; i<b.length; i++) {
+			 int[] summand = times(a,b[i]);
+			 for (int j=0; j<i; j++) {
+				 summand = times10(summand);
 			 }
-			 for (int j=b.length; j<a.length; j++) {
-				 produkt = a[j] + ueberschlag; // quasi *1
-				 outArr[j] = produkt % 10;
-				 ueberschlag = produkt - (produkt % 10);
-			 }
-		 } else if (a.length < b.length) {
-			 outArr = new int[b.length];
-			 for (int i=0; i<a.length; i++) {
-				 produkt = a[i] * b[i] + ueberschlag;
-				 outArr[i] = produkt % 10;
-				 ueberschlag = produkt - (produkt % 10);
-			 }
-			 for (int j=a.length; j<b.length; j++) {
-				 produkt = b[j] + ueberschlag; // quasi *1
-				 outArr[j] = produkt % 10;
-				 ueberschlag = produkt - (produkt % 10);
-			 }
-		 } else {
-			 outArr = new int[a.length];
-			 for (int i=0; i<a.length; i++) {
-				 produkt = a[i] * b[i] + ueberschlag;
-				 outArr[i] = produkt % 10;
-				 ueberschlag = produkt - (produkt % 10);
-			 }
+			 summe = add(summe,summand);
 		 }
-		 if (ueberschlag > 0) {
-			 int [] finalArr = Arrays.copyOf(outArr, outArr.length + 1);
-			 finalArr[finalArr.length - 1] = ueberschlag;
-			 return finalArr;
-		 } else {
-			 return outArr;
-		 }
+		 return summe;
 	 }
 
 	 // Test auf kleiner-Relation zweier Ziffernfelder: a < b ?
@@ -245,23 +218,25 @@ public class Bigs {
 	 // keine fuehrenden Nullen (ausser bei Null selbst)
 	 static boolean ok (int[ ] n) { 
 		 if ((n instanceof int []) && (!n.equals(null))) {
-			 return false;
-		 } else if (n.length == 1) {
-			 if ((n[0] < 10) && (n[0] >= 0)) {
-				 return true;
-			 } else {
-				 return false;
-			 }
-		 } else {
-			 if (n[n.length-1] == 0) {
-				 return false;
-			 }
-			 for (int i=0; i<n.length; i++) {
-				 if ((n[0] >= 10) || (n[0] < 0)) {
+			 if (n.length == 1) {
+				 if ((n[0] < 10) && (n[0] >= 0)) {
+					 return true;
+				 } else {
 					 return false;
 				 }
+			 } else {
+				 if (n[n.length-1] == 0) {
+					 return false;
+				 }
+				 for (int i=0; i<n.length; i++) {
+					 if ((n[i] >= 10) || (n[i] < 0)) {
+						 return false;
+					 }
+				 }
+				 return true;
 			 }
-			 return true;
+		 } else {
+			 return false;
 		 }
 	 }
 
@@ -273,7 +248,7 @@ public class Bigs {
 		 }
 		 int[] maxPair = new int[2];
 		 maxPair[1] = 0;
-		 for (var j=9; j >= 0; j++) {
+		 for (var j=9; j >= 0; j--) {
 			 if (haeufigkeit[j] >= maxPair[1]) {
 				 maxPair[0] = j;
 				 maxPair[1] = haeufigkeit[j];
