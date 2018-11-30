@@ -108,7 +108,7 @@ public class Bigs {
 	 // Umwandlung einer beliebigen int-Zahl in ein Ziffernfeld
 	 static int[ ] fromInt(int n) { 
 		 int multiplicator = 1;
-		 while (n/(Math.pow(10, multiplicator)) > 1) {
+		 while (n/(Math.pow(10, multiplicator)) >= 1) {
 			 multiplicator++;
 		 }
 		 int[] outArr = new int[multiplicator];
@@ -165,11 +165,13 @@ public class Bigs {
 	 static int[ ] times(int[ ]a, int[ ] b) {
 		 int[] summe = Null();
 		 for (int i=0; i<b.length; i++) {
-			 int[] summand = times(a,b[i]);
-			 for (int j=0; j<i; j++) {
-				 summand = times10(summand);
+			 if (b[i] != 0) {
+			 	int[] summand = times(a,b[i]);
+			 	for (int j=0; j<i; j++) {
+			 		summand = times10(summand);
+			 	}
+			 	summe = add(summe,summand);
 			 }
-			 summe = add(summe,summand);
 		 }
 		 return summe;
 	 }
