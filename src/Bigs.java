@@ -1,9 +1,3 @@
-import java.util.Arrays;
-
-/**
- * 
- */
-
 /**
  * @author Yannic
  *
@@ -48,7 +42,7 @@ public class Bigs {
 			 }
 		 }
 		 if (ueberschlag > 0) {
-			 int [] finalArr = Arrays.copyOf(outArr, outArr.length + 1);
+			 int [] finalArr = extendArrayByOne(outArr);
 			 finalArr[finalArr.length - 1] = ueberschlag;
 			 return finalArr;
 		 } else {
@@ -148,7 +142,7 @@ public class Bigs {
 			 ueberschlag = (produkt - (produkt % 10))/10;
 		 }
 		 if (ueberschlag > 0) {
-			 int [] finalArr = Arrays.copyOf(outArr, outArr.length + 1);
+			 int [] finalArr = extendArrayByOne(outArr);
 			 finalArr[finalArr.length - 1] = ueberschlag;
 			 return finalArr;
 		 } else {
@@ -278,4 +272,16 @@ public class Bigs {
 		 maxDigit(a);
 		 maxDigit(c);
 	 } 
+	 
+	 
+	 // erweitert ein eingegebenes Array um 1 Stelle
+	 private static int[] extendArrayByOne(int[] n) {
+		 int[] outArr = new int[n.length + 1];
+		 outArr[n.length] = 0;
+		 for (int i=0; i<n.length; i++) {
+			 outArr[i] = n[i];
+		 }
+		 return outArr;
+	 }
+	 
 }
